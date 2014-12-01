@@ -51,7 +51,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">...</a></li>
+          
+            <li class="active"><a href="/create_folder">Create Folder</a></li>
+          
             <li><a href="#about"> ... </a></li>
             <li><a href="#contact"><%= @@user_name %></a></li>
             <li class="dropdown">
@@ -70,7 +72,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="../navbar/">LogOut</a></li>
             <li><a href="../navbar-static-top/">...</a></li>
-            <li class="active"><a href="./">Home<span class="sr-only">(current)</span></a></li>
+            <li class="active"><a href="/home">Home<span class="sr-only">(current)</span></a></li>
           </ul>
         </div>
       </div>
@@ -81,6 +83,8 @@
         <h1>Add a new Pic</h1>
         <p>Welcome <b><%= @@user_name %></b>. Remember, choose a 'jpg' pic with up 2 Mb of size</p>
         <p> Enter the Image path to upload  : <input type="text" name="imagepath" id="imagepath" required/> </p>
+        <p> Select the folder to store the image  : <input type="text" name="folderid" id="folderid" required/> </p>
+
 
 <style>
   .thumb {
