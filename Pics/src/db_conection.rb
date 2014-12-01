@@ -5,13 +5,28 @@ require 'sinatra'
 
 class PicDBConection
 	#######  CREATE DABASE METHODS #######
-	def create_picture_table()
+	
+    def create_picture_table()
         begin
 
             db = SQLite3::Database.open "PicDB.db"
             db.execute "CREATE TABLE Picture(PicID INTEGER PRIMARY KEY, UserID INTEGER, FolderID INTEGER, PicName TEXT, Image BLOB)"
     
 
+        rescue SQLite3::Exception => e
+            puts "Exception Ocurred"
+            puts e
+        ensure
+            db.close if db
+        end
+    end
+
+    def create_folder_table()
+        begin
+            db = SQLite3::Database.open "PicDB.db"
+            #db.execute "DROP TABLE Folder"
+            db.execute "CREATE TABLE Folder(FolderID INTEGER PRIMARY KEY, UserID INTEGER, FolderName TEXT)"
+    
         rescue SQLite3::Exception => e
             puts "Exception Ocurred"
             puts e
@@ -95,8 +110,7 @@ class PicDBConection
              db.execute "INSERT INTO Picture (UserID, FolderID, PicName, Image)VALUES(" + user_id + ", " + folder_id + ",'" + pic_name + "', ?)", blob
         
         rescue SQLite3::Exception => e
-            puts "Exception ocurred"
-            puts e
+            return puts e
         
         ensure
             db.close if db
@@ -105,7 +119,43 @@ class PicDBConection
     end
 
 
+    ####### FOLDER METHODS #######
 
+    def add_folder_in_databse(user_id, name)
+        begin
+            db = SQLite3::Database.open 'PicDB.db'
+            
+        #    db.execute "INSERT INTO Folder (FolderName)VALUES(name)"
+            
+            db.execute "INSERT INTO Folder (UserID, FolderName)VALUES(" + user_id + ", '" + name + "')"
+        
+        rescue SQLite3::Exception => e
+            return e
+        
+        ensure
+            db.close if db
+        end
+
+    end
+
+    def folder_for_specific_user(user_id)
+        begin
+    
+        db = SQLite3::Database.open "PicDB.db"
+
+        folder_list = db.execute "SELECT FolderID, FolderName FROM Folder where UserID = '" + user_id + "'"
+        
+        return folder_list 
+        rescue SQLite3::Exception => e 
+    
+            return e
+    
+        ensure
+            db.close if db
+        end
+        
+
+    end
 ############################################
 	def view_image_table()
 		begin
@@ -147,12 +197,36 @@ class PicDBConection
 		end
 	end
 
+    def view_folder_table()
+        begin
+            puts "FOLDER TABLE"
+            db = SQLite3::Database.open "PicDB.db"
+            stm = db.prepare "SELECT * FROM Folder"
+
+            rs = stm.execute
+            while (row = rs.next) do
+                puts row.join "\s"
+            end
+
+        rescue SQLite3::Exception => e
+            puts "Exception Ocurred"
+            puts e
+        ensure
+            stm.close if stm
+            db.close if db
+        end
+    end
+
 end
 ##### CREATE DATABASE AND INSERT DEFAULT USER Admin
-
+#
 #pics = PicDBConection.new
+#pics.add_folder_in_databse('1', 'Folder1')
+#a = pics.folder_for_specific_user('test')
+#pics.create_folder_table()
 #pics.create_picture_table()
 #pics.create_user_table()
+#pics.view_folder_table()
 #pics.view_image_table()
 #pics.view_user_table()
 

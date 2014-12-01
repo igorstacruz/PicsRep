@@ -10,10 +10,11 @@ When(/^I login the application with a valid user account$/) do
 end
 
 When(/^I try to save a new image from the following path "(.*?)"$/) do |image_path|
-  
+  img_path = @@PICS_PATH + image_path
   within(:xpath, "//div[@class='jumbotron']") do
-    fill_in 'imagepath', with: image_path
-    attach_file('files', image_path)
+    fill_in 'imagepath', with: img_path
+    fill_in 'folderid', with: '1'
+    attach_file('files', img_path)
     click_button 'saveimage'
   end
 
@@ -26,17 +27,21 @@ When(/^I try to save a new image leaving all the fields empties$/) do
 end
 
 When(/^I set the image path "(.*?)" and leave the image name empty$/) do |image_path|
+  img_path = @@PICS_PATH + image_path
   within(:xpath, "//div[@class='jumbotron']") do
-    fill_in 'imagepath', with: image_path
+    fill_in 'imagepath', with: img_path
+    fill_in 'folderid', with: '1'
     click_button 'saveimage'
   end
 
 end
 
 When(/^I set the image name "(.*?)" and leave the image path empty$/) do |image_path|
+  img_path = @@PICS_PATH + image_path
   within(:xpath, "//div[@class='jumbotron']") do
     fill_in 'imagepath', with: ""
-    attach_file('files', image_path)
+    fill_in 'folderid', with: '1'
+    attach_file('files', img_path)
     click_button 'saveimage'
   end
 

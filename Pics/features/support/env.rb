@@ -2,6 +2,9 @@ require 'Capybara'
 require 'Capybara/cucumber'
 require 'rspec'
 require 'capybara/poltergeist'
+require "fileutils"
+
+@@PICS_PATH = "E:/GitHub/Pics/"
 #
 #Capybara.default_driver = :poltergeist
 #Capybara.register_driver :poltergeist do |app|

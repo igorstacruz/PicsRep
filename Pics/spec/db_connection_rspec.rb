@@ -1,9 +1,12 @@
 require 'db_conection'
+require 'Folder'
+require "fileutils"
+require "constants"
 
 describe "Image" do
     it "should add an image in the database when send a correct image path" do
         img = PicDBConection.new()
-        image_path = "C:/Pics3/Pics/features/images_test/gym.jpg"
+        image_path = @@PICS_PATH + "images/gym.jpg"
         img.add_image_in_databse('1','2','test.jpg',image_path)
         begin
     		db = SQLite3::Database.open "PicDB.db"
@@ -26,12 +29,65 @@ describe "Image" do
 
     it "should return an exception when try to add an image with incorrect image path" do
         img = PicDBConection.new()
-        image_path = "C:/Pics3/Pics/features/images_test/incorrect.jpg"
+        image_path = @@PICS_PATH + "images/incorrect.jpg"
         e = img.add_image_in_databse('1','2','test_invalid.jpg',image_path)
         e = e.to_s
-        exception_expected = "No such file or directory - C:/Commit/Pics/features/images_test/incorrect.jpg"
+        exception_expected = "No such file or directory - " + @@PICS_PATH + "images/incorrect.jpg"
         
         expect(e).to eq exception_expected
     end
+end
+
+describe "Folder" do
+
+    it "should add a folder record in database when send correct values" do
+        folder_obj = PicDBConection.new()
+        folder_obj.add_folder_in_databse('1','TestFolder')
+        begin
+            db = SQLite3::Database.open "PicDB.db"
+            stm = db.prepare "SELECT FolderName FROM Folder where FolderName = 'TestFolder'"
+
+            rs = stm.execute
+            while (row = rs.next) do
+                exp = row.join
+            end
+
+        rescue SQLite3::Exception => e
+            puts "Exception Ocurred"
+            puts e
+        ensure
+            stm.close if stm
+            db.close if db
+        end
+        expect(exp).not_to eq nil
+    end
+
+    it "should return all the folder that belong to a specific user" do
+        folder_obj = PicDBConection.new()
+        folder_list = folder_obj.folder_for_specific_user('1')
+
+        expect(folder_list).not_to eq nil
+
+    end
+
+    it "should return an exception when try to save a new folder record on DB with invalid values" do
+        folder_obj = PicDBConection.new()
+        e = folder_obj.add_folder_in_databse('Invalid','TestInvalid')
+        e = e.to_s
+        exception_expected = "no such column: Invalid"
+        
+        expect(e).to eq exception_expected
+        
+    end
+
+    it "should create a new folder in the expected path" do
+        folder = Folder.new
+        folder.create_new_folder('admin', 'NewTest')
+        expected_directory = @@PICS_PATH + "images/admin/NewTest"
+        expect(File.directory? expected_directory).not_to eq false
+        FileUtils.rmdir expected_directory
+    end
+
+
 end
 
