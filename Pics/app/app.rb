@@ -1,15 +1,15 @@
 require "sinatra"
 require "sqlite3"
-require "./src/db_conection"
-require "./src/constants"
-require "./src/Folder"
+require "../src/db_conection"
+require "../src/constants"
+require "../src/Folder"
 
 
 
 
 db_pic_conection = PicDBConection.new
 @@SaveSuccessfully = "..."
-@folder_list = [["test1", 1], ["test2", 0]]
+
 
 ###### Sinatra Part ######
 get "/login" do
