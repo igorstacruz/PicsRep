@@ -1,8 +1,8 @@
 require "sinatra"
 require "sqlite3"
-require "../src/db_conection"
-require "../src/constants"
-require "../src/Folder"
+require "./src/db_conection"
+require "./src/constants"
+require "./src/Folder"
 
 
 
@@ -25,12 +25,30 @@ end
 
 get '/home' do
      
+    #user_id = db_pic_conection.get_user_id(@@user_name)
+    #user_id = user_id.join
+    #@folder_list = db_pic_conection.folder_for_specific_user(user_id)
+    #puts @folder_list
+    #puts @folder_list.class
+    @@SaveSuccessfully = "..."
+    erb :home
+
+end
+
+get '/delete_image' do
+     
+    puts @@user_name
     user_id = db_pic_conection.get_user_id(@@user_name)
     user_id = user_id.join
-    @folder_list = db_pic_conection.folder_for_specific_user(user_id)
-    puts @folder_list
-    puts @folder_list.class
-    erb :home
+    puts user_id
+    @list_pics = db_pic_conection.select_all_pisc_from_user(user_id)
+    puts @list_pics
+    puts @list_pics.class
+    #@folder_list = db_pic_conection.folder_for_specific_user(user_id)
+    #puts @folder_list
+    #puts @folder_list.class
+    @@SaveSuccessfully = "..."
+    erb :delete_image
 
 end
 
@@ -72,10 +90,22 @@ post '/foldertosave' do
     #image_obj.add_image_in_databse('userID', folderID, @image_name , @image_path)
     folder_obj = Folder.new
     folder_obj.create_new_folder(@@user_name, @folder_name)
-    db_pic_conection.create_folder_table()
+    #db_pic_conection.create_folder_table()
     db_pic_conection.add_folder_in_databse(user_id, @folder_name)
 
-    #@@SaveSuccessfully = "Image Saved"
+    @@SaveSuccessfully = "..."
 
     erb :home, :locals => {:username => params["username"]}
 end
+
+post '/imagetodelete' do
+    @image_name = params["imagename"]
+    puts @image_name
+    user_id = db_pic_conection.get_user_id(@@user_name)
+    user_id = user_id.join
+    puts user_id
+    db_pic_conection.delete_image_from_databse(user_id, @image_name)
+    @@SaveSuccessfully = "..."
+    erb :home, :locals => {:username => params["username"]}
+end
+
