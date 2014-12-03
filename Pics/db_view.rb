@@ -11,7 +11,7 @@ class PicDBConection
 
             db = SQLite3::Database.open "PicDB.db"
             db.execute "CREATE TABLE Picture(PicID INTEGER PRIMARY KEY, UserID INTEGER, FolderID INTEGER, PicName TEXT, Image BLOB)"
-    
+            
 
         rescue SQLite3::Exception => e
             puts "Exception Ocurred"
@@ -26,7 +26,7 @@ class PicDBConection
             db = SQLite3::Database.open "PicDB.db"
             #db.execute "DROP TABLE Folder"
             db.execute "CREATE TABLE Folder(FolderID INTEGER PRIMARY KEY, UserID INTEGER, FolderName TEXT)"
-    
+            db.execute "INSERT INTO Folder(UserID, FolderName) VALUES ('1','images/admin')"
         rescue SQLite3::Exception => e
             puts "Exception Ocurred"
             puts e
@@ -129,7 +129,7 @@ class PicDBConection
         rescue SQLite3::Exception => e 
     
             puts "Exception occurred"
-            return e
+            puts e
     
         ensure
             db.close if db
@@ -249,15 +249,15 @@ class PicDBConection
 end
 ##### CREATE DATABASE AND INSERT DEFAULT USER Admin
 #
-#pics = PicDBConection.new
+pics = PicDBConection.new
 #pics.add_folder_in_databse('1', 'Folder1')
 #a = pics.folder_for_specific_user('test')
 #pics.create_folder_table()
 #pics.create_picture_table()
 #pics.create_user_table()
-#pics.view_folder_table()
-#pics.view_image_table()
-#pics.view_user_table()
+pics.view_folder_table()
+pics.view_image_table()
+pics.view_user_table()
 #pics.delete_image_from_databse('1', 'gym.jpg')
 #pics.view_image_table()
 

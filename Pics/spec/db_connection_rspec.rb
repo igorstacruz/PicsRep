@@ -36,6 +36,39 @@ describe "Image" do
         
         expect(e).to eq exception_expected
     end
+
+    it "should delete an image from the database when send a correct image path" do
+        img = PicDBConection.new()
+        image_path = @@PICS_PATH + "images/gym.jpg"
+        img.add_image_in_databse('1','2','test_delete.jpg',image_path)
+        img.delete_image_from_databse('1', 'test_delete.jpg')
+        begin
+            db = SQLite3::Database.open "PicDB.db"
+            stm = db.prepare "SELECT PicName FROM Picture where PicName = 'test_delete.jpg'"
+
+            rs = stm.execute
+            while (row = rs.next) do
+                exp = row.join
+            end
+
+        rescue SQLite3::Exception => e
+            puts "Exception Ocurred"
+            puts e
+        ensure
+            stm.close if stm
+            db.close if db
+        end
+        expect(exp).to eq nil
+    end
+
+    it "should return all the images from the database that belong a specific user" do
+        img = PicDBConection.new()
+        image_path = @@PICS_PATH + "images/gym.jpg"
+        img.add_image_in_databse('1','2','test1.jpg',image_path)
+        image_list = img.select_all_pisc_from_user('1')
+        
+        expect(image_list).not_to eq nil
+    end
 end
 
 describe "Folder" do

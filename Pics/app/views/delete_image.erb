@@ -50,14 +50,19 @@
 
 
     <div class="jumbotron">
-      <form method="post" action="/foldertosave">
-        <h1>Add a new Folder</h1>
-        <p>Hey <b><%= @@user_name %></b>. you can create all the folder that you want</p>
-        <p> Enter the Folder Name  : <input type="text" name="foldername" id="foldername" placeholder="NewFolder" required/> </p>
-        <p><button type="submit" name="savefolder" id="savefolder" class="btn btn-primary btn-lg">Save Folder</button></p>
-        
-
-        
+      <form method="post" action="/imagetodelete">
+        <h1>Delete an Image</h1>
+        <p>Hey <b><%= @@user_name %></b>. you can delete an image, inserting the Image Name.</p>
+        <p> Enter the Image Name  : <input type="text" name="imagename" id="imagename" placeholder="ImageName" required/> </p>
+        <p><button type="submit" name="deleteimage" id="deleteimage" class="btn btn-primary btn-lg">Delete Image</button></p>
+        <%=
+        #%table
+         #%tbody
+            #@list_pics.each do |row|
+             #%tr
+            #row.each do |column|
+             #%td= column
+        %>
       </form>
     </div>
     
