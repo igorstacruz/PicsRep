@@ -246,6 +246,30 @@ class PicDBConection
         end
     end
 
+    # Method to verify is a user with password already exist
+    # return: true: Exist  |  false: Not exist
+    def does_user_with_pass_exist(name, password)
+        begin
+            puts "USER TABLE"
+            db = SQLite3::Database.open "PicDB.db"         
+            row_count = 0
+            db.execute "SELECT * FROM User where Name = '" + name + "' and Password ='" + password + "' " do |row|
+                row_count = row_count + 1
+            end    
+            if row_count > 0
+                return true
+            else
+                return false
+            end    
+        rescue SQLite3::Exception => e
+            puts "Exception Ocurred"
+            puts e
+        ensure
+            db.close if db
+        end
+    end
+
+
 end
 ##### CREATE DATABASE AND INSERT DEFAULT USER Admin
 #
