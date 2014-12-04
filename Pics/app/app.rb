@@ -1,8 +1,8 @@
 require "sinatra"
 require "sqlite3"
-require "./src/db_conection"
-require "./src/constants"
-require "./src/Folder"
+require "../src/db_conection"
+require "../src/constants"
+require "../src/Folder"
 
 
 
@@ -12,15 +12,22 @@ db_pic_conection = PicDBConection.new
 
 
 ###### Sinatra Part ######
-get "/login" do
-    redirect "/login.html"
+get "/login.html" do
+    @@wrong_user_message = ""
+    @@user_name = ""
+    erb :login
 end
 
 post '/login.html' do
-    # TODO: Validate username and password
     @@SaveSuccessfully = "..."
-    @@user_name = params[:username]
-    erb :home, :locals => {:username => params["username"]}
+    @@user_pass_exist = db_pic_conection.does_user_with_pass_exist(params[:username], params[:password]) 
+    if @@user_pass_exist == true
+        @@user_name = params[:username]
+        erb :home, :locals => {:username => params["username"]}
+    else 
+        @@wrong_user_message = "Usuario o Password incorrectos"        
+        erb :login
+    end      
 end
 
 get '/home' do
