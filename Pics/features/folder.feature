@@ -3,7 +3,7 @@ Feature: Folder Page
     As a user I should be able to verify that all is working as expected on Folder page
 
   Background: Login
-    Given I login the application as "admin" with password "admin123"
+    Given I login the application as "tester" with password "tester123"
 
 	Scenario: Verify that all the components are displayed
 
@@ -13,8 +13,16 @@ Feature: Folder Page
 	Scenario: Verify that a new folder is created succesfully
 
 	  When I navigate to Create Folder page
-	  And I try to save a new folder with the following name "NewFolderTest"
-	  Then I should see that the image was saved and return to the Home page
+	  And I try to save a new folder with the following name "folder1"
+	  Then I should see that the folder "tester/folder1" was saved and return to the Home page
+	  
+	  When I navigate to Create Folder page
+	  And I try to save a new folder with the following name "folder2"
+	  Then I should see that the folder "tester/folder2" was saved and return to the Home page
+
+	  When I navigate to Create Folder page
+	  And I try to save a new folder with the following name "folder1/folder11"
+	  Then I should see that the folder "tester/folder1/folder11" was saved and return to the Home page
 
 	Scenario: Verify negative cases for the New Folder form
 	  When I navigate to Create Folder page

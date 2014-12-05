@@ -33,18 +33,15 @@ Then(/^I should see all the labels, fields and buttons displayed in folder page$
     #expect(page).to have_content "Fill your login credetials"
 end
 
-
-
-Then(/^I should see that the image was saved and return to the Home page$/) do
+Then(/^I should see that the folder "(.*?)" was saved and return to the Home page$/) do |folder_name|
   within(:xpath, "//div[@class='jumbotron']") do
     find('h1',:text => "Add a new Pic")
+    find('#folderid option',:text => folder_name)
+
     #Add verification in dropdown list.
   end
   puts "The new folder was saved successfully"
-  path_dir = @@PICS_PATH + "images/admin/NewFolderTest"
-  puts path_dir
-  FileUtils.rmdir path_dir
-    #expect(page).to have_content "Fill your login credetials"
+
 end
 
 Then(/^I should see a validation message and the new folder should not be saved$/) do

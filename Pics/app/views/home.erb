@@ -84,8 +84,13 @@
         <h1>Add a new Pic</h1>
         <p>Welcome <b><%= @@user_name %></b>. Remember, choose a 'jpg' pic with up 2 Mb of size</p>
         <p> Enter the Image path to upload  : <input type="text" name="imagepath" id="imagepath" required/> </p>
-        <p> Select the folder to store the image  : <input type="text" name="folderid" id="folderid" required/> </p>
-
+        <p> Select the folder to store the image  : 
+          <select id="folderid" name="folderid">
+            <%@list_folder.each do |folder|%>
+            <option value="<%=folder[0]%>"><%=folder[1]%></option>
+          <%end%>
+        </select>
+        </p>
 
 <style>
   .thumb {
@@ -94,7 +99,7 @@
     margin: 10px 5px 0 0;
   }
 </style>
-<p> Vista Previa </p>
+<p> Preview </p>
 <input type="file" id="files" name="files" onchange="checkFile(this)" required/>
 <output id="list"></output>
 

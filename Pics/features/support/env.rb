@@ -4,7 +4,9 @@ require 'rspec'
 require 'capybara/poltergeist'
 require "fileutils"
 
-@@PICS_PATH = "E:/GitHub/Pics/"
+
+@@PICS_PATH = "E:/GitHub/Pics/app/public/"
+
 #
 #Capybara.default_driver = :poltergeist
 #Capybara.register_driver :poltergeist do |app|
@@ -25,6 +27,7 @@ require "fileutils"
 # end
 
 # Capybara.javascript_driver = :chrome
+Capybara.exact = true
 
 Capybara.default_driver = :selenium
 class CapybaraDriverRegistrar
