@@ -9,7 +9,14 @@ require "../src/Folder"
 
 db_pic_conection = PicDBConection.new
 @@SaveSuccessfully = "..."
+@@user_name = ""
+enable :sessions
 
+use Rack::Session::Cookie, 
+:key => 'rack.session',
+:path => '/',
+:expire_after => 14400, # In seconds
+:secret => 'change_me'
 
 ###### Sinatra Part ######
 get "/login.html" do
@@ -18,12 +25,21 @@ get "/login.html" do
     erb :login
 end
 
+get "/logout" do
+    @@wrong_user_message = ""
+    @@user_name = ""
+    session.clear
+    redirect '/login.html'
+end
+
 post '/login.html' do
     @@SaveSuccessfully = "..."
     @@user_pass_exist = db_pic_conection.does_user_with_pass_exist(params[:username], params[:password]) 
     if @@user_pass_exist == true
+        session[:user_id] = params[:username] 
         @@user_name = params[:username]
-        erb :home, :locals => {:username => params["username"]}
+        redirect '/home'
+        #erb :home, :locals => {:username => params["username"]}
     else 
         @@wrong_user_message = "Usuario o Password incorrectos"        
         erb :login
@@ -38,8 +54,11 @@ get '/home' do
     #puts @folder_list
     #puts @folder_list.class
     @@SaveSuccessfully = "..."
-    erb :home
-
+    if session[:user_id] == @@user_name
+        erb :home
+    else
+        redirect '/login.html'
+    end  
 end
 
 get '/delete_image' do
