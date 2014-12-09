@@ -1,1 +1,3 @@
-@@PICS_PATH = "E:/GitHub/Pics/"
+
+@@PICS_PATH = "E:/GitHub/Pics/app/public/"
+

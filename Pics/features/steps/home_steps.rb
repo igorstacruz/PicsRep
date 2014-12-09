@@ -1,5 +1,5 @@
 Given(/^I login the application as "(.*?)" with password "(.*?)"$/) do |user, password|
-	visit   "http://localhost:4567/login"
+	visit   "http://localhost:4567/login.html"
 	fill_in 'username', with: user
   fill_in 'password', with: password
   click_button 'login'

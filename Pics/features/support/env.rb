@@ -5,6 +5,7 @@ require 'capybara/poltergeist'
 require "fileutils"
 
 
+
 @@PICS_PATH = "E:/GitHub/Pics/app/public/"
 
 #

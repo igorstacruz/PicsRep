@@ -33,6 +33,7 @@ Then(/^I should see all the labels, fields and buttons displayed in folder page$
     #expect(page).to have_content "Fill your login credetials"
 end
 
+
 Then(/^I should see that the folder "(.*?)" was saved and return to the Home page$/) do |folder_name|
   within(:xpath, "//div[@class='jumbotron']") do
     find('h1',:text => "Add a new Pic")

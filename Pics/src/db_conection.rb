@@ -82,6 +82,23 @@ class PicDBConection
         rescue SQLite3::Exception => e 
     
             return e
+  
+        ensure
+            db.close if db
+        end   
+    end
+
+    def get_user_name(user_id)
+        begin
+    
+        db = SQLite3::Database.open "PicDB.db"
+        #db.execute "CREATE TABLE User(UserID INTEGER PRIMARY KEY, Name TEXT, Email TEXT, Password TEXT, Valid_Account BOOL, Status CHAR, Last_Login DATETIME)"
+        user_id = db.execute "SELECT Name FROM User where UserID = '" + user_id + "'"
+        return user_id
+         
+        rescue SQLite3::Exception => e 
+    
+            return e
     
         ensure
             db.close if db
@@ -164,6 +181,7 @@ class PicDBConection
              db.execute "DELETE FROM Picture WHERE PicName = '" + pic_name + "' and UserID = '" + user_id + "' and PicID = '" + pic_id + "'"
         
         rescue SQLite3::Exception => e
+
             return e
         
         ensure
@@ -222,7 +240,23 @@ class PicDBConection
         ensure
             db.close if db
         end
+    end
 
+    def select_all_pics_from_user_and_specific_folder(user_id, folder_id)
+        begin
+    
+        db = SQLite3::Database.open "PicDB.db"
+        #db.execute "CREATE TABLE Picture(PicID INTEGER PRIMARY KEY, UserID INTEGER, FolderID INTEGER, PicName TEXT, Image BLOB)"
+        pics_list = db.execute "SELECT PicName FROM Picture where UserID = '" + user_id + "' and FolderID = '" + folder_id + "'"
+        return pics_list
+         
+        rescue SQLite3::Exception => e 
+    
+            return e
+    
+        ensure
+            db.close if db
+        end   
     end
 
     def folder_for_specific_user(user_id)
@@ -247,6 +281,25 @@ class PicDBConection
         folder_name = db.execute "SELECT FolderName FROM Folder where FolderID = '" + folder_id + "' and UserID = '" + user_id + "'"
         f_name = folder_name.join
         return f_name
+        rescue SQLite3::Exception => e 
+    
+            return e
+    
+        ensure
+            db.close if db
+        end
+    end
+
+    def get_folder_id_root_of_user(user_id, user_name)
+        ############################################
+        #db.execute "CREATE TABLE Folder(FolderID INTEGER PRIMARY KEY, UserID INTEGER, FolderName TEXT)"
+        begin    
+        db = SQLite3::Database.open "PicDB.db"
+        query = "select FolderID from Folder where UserID ='" + user_id + "' and FolderName = '" + user_name + "'"
+        folder_name = db.execute query
+        f_name = folder_name.join
+        return f_name
+        
         rescue SQLite3::Exception => e 
     
             return e
@@ -317,16 +370,18 @@ class PicDBConection
         end
     end
 
+
     # Method to verify is a user with password already exist
     # return: true: Exist  |  false: Not exist
     def does_user_with_pass_exist(name, password)
+
         begin
-            puts "USER TABLE"
+
             db = SQLite3::Database.open "PicDB.db"         
             row_count = 0
-            db.execute "SELECT * FROM User where Name = '" + name + "' and Password ='" + password + "' " do |row|
+            db.execute "SELECT * FROM User where Name = '" + name + "' and Password ='" + password + "'" do |row|
                 row_count = row_count + 1
-            end    
+            end
             if row_count > 0
                 return true
             else
@@ -339,7 +394,4 @@ class PicDBConection
             db.close if db
         end
     end
-
-
 end
-

@@ -2,6 +2,34 @@
 
 <html>
   <head>
+    <style>
+div.img {
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid #0000ff;
+    height: auto;
+    width: auto;
+    float: left;
+    text-align: center;
+} 
+
+div.img img {
+    display: inline;
+    margin: 5px;
+    border: 1px solid #ffffff;
+}
+
+div.img a:hover img {
+    border: 1px solid #0000ff;
+}
+
+div.desc {
+  text-align: center;
+  font-weight: normal;
+  width: 120px;
+  margin: 5px;
+}
+</style>
     
     <title>Pics 3</title>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -22,11 +50,11 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
+          
             <li class="active"><a href="/create_folder">Create Folder</a></li>
             <li class="active"><a href="/delete_image">Delete Image</a></li>
-
             <li class="active"><a href="/image_folder">Image Galery</a></li>
-
+          
             <li><a href="#about"> ... </a></li>
             <li><a href="#contact"><%= @@user_name %></a></li>
             <li class="dropdown">
@@ -51,18 +79,31 @@
       </div>
     </nav>
 
-
     <div class="jumbotron">
-      <form method="post" action="/foldertosave">
-        <h1>Add a new Folder</h1>
-        <p>Hey <b><%= @@user_name %></b>. you can create all the folder that you want</p>
-        <p> Enter the Folder Name  : <input type="text" name="foldername" id="foldername" placeholder="NewFolder" required/> </p>
-        <p><button type="submit" name="savefolder" id="savefolder" class="btn btn-primary btn-lg">Save Folder</button></p>
-        
-
-        
+      <form method="post" action="/galery_by_folder">
+        <h1>Image Galery</h1>
+        <p>Welcome <b><%= @@user_name %></b>. This is your Image Galery by folder</p>
+        <p> Select the folder to view your images  : 
+          <select id="folderid" name="folderid">
+            <%@list_folder.each do |folder|%>
+            <option value="<%=folder[0]%>"><%=folder[1]%></option>
+          <%end%>
+        </select>
+        </p>
+        <p><button type="submit" name="viewimage" id="viewimage" class="btn btn-primary btn-lg">View image</button></p>
       </form>
-    </div>
     
+      </div>
+   </div>
+    
+    <div><h4>Folder Name: <%=@folder_name%></h4></div>
+
+    <%@pics_list.each do |pic|%>
+      <div class="img">    
+          <img src="./images/<%=@folder_name%>/<%=pic[0]%>" alt="<%=pic[0]%>" width="110" height="90">
+          <div class="desc"><%=pic[0]%></div>
+      </div>
+    <%end%>
+
 	</body>
 </html>

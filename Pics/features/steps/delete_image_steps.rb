@@ -41,3 +41,4 @@ Then(/^I should see that the image deleted before "(.*?)" is not displayed anymo
   expect(page).not_to have_content(image_name)
   puts "The was deleted successfully"
 end
+

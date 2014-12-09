@@ -20,6 +20,7 @@ use Rack::Session::Cookie,
 :secret => 'change_me'
 
 
+
 ###### Sinatra Part ######
 get "/login.html" do
     @@wrong_user_message = ""
@@ -36,10 +37,13 @@ end
 
 post '/login.html' do
     @@SaveSuccessfully = "..."
+
     @@user_pass_exist = db_pic_conection.does_user_with_pass_exist(params[:username], params[:password]) 
+
     if @@user_pass_exist == true
         session[:user_id] = params[:username] 
         @@user_name = params[:username]
+
         redirect '/home'
         #erb :home, :locals => {:username => params["username"]}
     else 
@@ -50,14 +54,11 @@ end
 
 get '/home' do
      
-    #user_id = db_pic_conection.get_user_id(@@user_name)
-    #user_id = user_id.join
-    #@folder_list = db_pic_conection.folder_for_specific_user(user_id)
-    #puts @folder_list
-    #puts @folder_list.class
     @@SaveSuccessfully = "..."
     if session[:user_id] == @@user_name
-        @@user_name = params[:username]
+
+        #@@user_name = params[:username]
+
         user_id = db_pic_conection.get_user_id(@@user_name)
         user_id = user_id.join
         @list_folder = db_pic_conection.folder_for_specific_user(user_id)
@@ -69,16 +70,10 @@ end
 
 get '/delete_image' do
      
-    puts @@user_name
     user_id = db_pic_conection.get_user_id(@@user_name)
     user_id = user_id.join
-    puts user_id
     @list_pics = db_pic_conection.select_all_pisc_from_user(user_id)
-    puts @list_pics
-    puts @list_pics.class
-    #@folder_list = db_pic_conection.folder_for_specific_user(user_id)
-    #puts @folder_list
-    #puts @folder_list.class
+
     @@SaveSuccessfully = "..."
     erb :delete_image
 
@@ -109,12 +104,57 @@ get '/delete_image' do
 
 end
 
+get '/home' do
+     
+    @@SaveSuccessfully = "..."
+
+    user_id = db_pic_conection.get_user_id(@@user_name)
+    user_id = user_id.join
+    @list_folder = db_pic_conection.folder_for_specific_user(user_id)
+
+    erb :home
+
+end
+
+get '/delete_image' do
+     
+    user_id = db_pic_conection.get_user_id(@@user_name)
+    user_id = user_id.join
+
+    @list_pics = db_pic_conection.select_all_pisc_from_user(user_id)
+
+    @@SaveSuccessfully = "..."
+
+    erb :delete_image
+
+end
+
+get '/image_folder' do
+     
+    user_id = db_pic_conection.get_user_id(@@user_name)
+    user_id = user_id.join
+
+    @list_folder = db_pic_conection.folder_for_specific_user(user_id)
+
+    user_name = db_pic_conection.get_user_name(user_id)
+    user_name = user_name.join
+
+    @folder_id = db_pic_conection.get_folder_id_root_of_user(user_id, user_name)
+
+    @pics_list = db_pic_conection.select_all_pics_from_user_and_specific_folder(user_id, @folder_id)
+
+    @folder_name = db_pic_conection.get_folder_name(@folder_id, user_id)
+
+    erb :image_folder
+
+end
+
 get "/register" do
     redirect "/register.html"
 end
 
 get "/create_folder" do
-    #redirect "/create_folder.html"
+
     erb :folder, :locals => {:username => params["username"]}
 end
 
@@ -161,6 +201,7 @@ post '/foldertosave' do
 end
 
 post '/imagetodelete' do
+
     @image_code = params["imagecode"]
     user_id = db_pic_conection.get_user_id(@@user_name)
     user_id = user_id.join
@@ -177,4 +218,19 @@ post '/imagetodelete' do
 
     erb :home, :locals => {:username => params["username"]}
 end
+
+
+post '/galery_by_folder' do
+   
+    @folder_id = params["folderid"]
+    user_id = db_pic_conection.get_user_id(@@user_name)
+    user_id = user_id.join
+    
+    @list_folder = db_pic_conection.folder_for_specific_user(user_id)
+    @pics_list = db_pic_conection.select_all_pics_from_user_and_specific_folder(user_id, @folder_id)
+    @folder_name = db_pic_conection.get_folder_name(@folder_id, user_id)
+
+    erb :image_folder
+end
+ 
 
