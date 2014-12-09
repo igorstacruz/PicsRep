@@ -1,0 +1,1 @@
+cucumber -f html -o searchByTag.html -t @search_by_tag

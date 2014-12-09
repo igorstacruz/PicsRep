@@ -394,4 +394,38 @@ class PicDBConection
             db.close if db
         end
     end
+    
+    def tag_for_specific_user(user_id)
+        begin    
+        db = SQLite3::Database.open "PicDB.db"
+
+        tag_list = db.execute "SELECT tag, PicName FROM Picture where UserID = '" + user_id + "'"
+        
+        return tag_list 
+        rescue SQLite3::Exception => e 
+    
+            return e
+    
+        ensure
+            db.close if db
+        end
+    end
+
+
+    def image_by_tag(tag, user_id)
+        begin    
+        db = SQLite3::Database.open "PicDB.db"
+
+        tag_list = db.execute "SELECT PicName FROM Picture where tag = '" + tag + "' and UserID= '" + user_id + "'"
+        
+        return tag_list 
+        rescue SQLite3::Exception => e 
+    
+            return e
+    
+        ensure
+            db.close if db
+        end
+    end
+
 end
