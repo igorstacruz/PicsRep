@@ -6,14 +6,18 @@ Given(/^I login the application as "(.*?)" with password "(.*?)"$/) do |user, pa
 end
 
 When(/^I login the application with a valid user account$/) do
-  
+  within(:xpath, "//div[@class='container']") do
+    find(:xpath, "//a[@href='/home']").click
+  end
 end
 
-When(/^I try to save a new image from the following path "(.*?)"$/) do |image_path|
+When(/^I try to save a new image from "(.*?)" in the following folder "(.*?)"$/) do |image_path, folder_name|
   img_path = @@PICS_PATH + image_path
   within(:xpath, "//div[@class='jumbotron']") do
     fill_in 'imagepath', with: img_path
-    fill_in 'folderid', with: '1'
+    within('#folderid') do
+      find('option', :text => folder_name, :match => :prefer_exact).click
+    end
     attach_file('files', img_path)
     click_button 'saveimage'
   end
@@ -30,7 +34,6 @@ When(/^I set the image path "(.*?)" and leave the image name empty$/) do |image_
   img_path = @@PICS_PATH + image_path
   within(:xpath, "//div[@class='jumbotron']") do
     fill_in 'imagepath', with: img_path
-    fill_in 'folderid', with: '1'
     click_button 'saveimage'
   end
 
@@ -40,22 +43,21 @@ When(/^I set the image name "(.*?)" and leave the image path empty$/) do |image_
   img_path = @@PICS_PATH + image_path
   within(:xpath, "//div[@class='jumbotron']") do
     fill_in 'imagepath', with: ""
-    fill_in 'folderid', with: '1'
     attach_file('files', img_path)
     click_button 'saveimage'
   end
 
 end
 
-
-
-
 Then(/^I should see all the labels, fields and buttons displayed$/) do
   within(:xpath, "//div[@class='jumbotron']") do
     find('h1',:text => "Add a new Pic")
     find('p',:text => "Remember, choose a 'jpg' pic with up 2 Mb of size")
+    find('p',:text => "Enter the Image path to upload")
     find('#imagepath')
-    find('p',:text => "Vista Previa")
+    find('p',:text => "Select the folder to store the image")
+    find('#folderid')
+    find('p',:text => "Preview")
     find('#files')
     find('#saveimage',:text => "Save image")
 
