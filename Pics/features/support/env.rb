@@ -6,7 +6,8 @@ require "fileutils"
 
 
 
-@@PICS_PATH = "E:/GitHub/Pics/app/public/"
+#@@PICS_PATH = "E:/GitHub/Pics/app/public/"
+@@PICS_PATH = "C:/CloneGitHub/Pics/app/public/"
 
 #
 #Capybara.default_driver = :poltergeist

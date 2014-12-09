@@ -4,6 +4,7 @@ end
 
 When(/^I navigate to the login page$/) do
     visit  "http://localhost:4567/login.html"
+    page.driver.browser.manage.window.maximize
 end
 
 When(/^I enter wrong account credentials$/) do 

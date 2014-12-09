@@ -37,13 +37,14 @@ end
 
 post '/login.html' do
     @@SaveSuccessfully = "..."
-
     @@user_pass_exist = db_pic_conection.does_user_with_pass_exist(params[:username], params[:password]) 
 
     if @@user_pass_exist == true
         session[:user_id] = params[:username] 
         @@user_name = params[:username]
-
+        user_id = db_pic_conection.get_user_id(@@user_name)
+        user_id = user_id.join
+        @list_tag = db_pic_conection.tag_for_specific_user(user_id) 
         redirect '/home'
         #erb :home, :locals => {:username => params["username"]}
     else 
@@ -62,6 +63,7 @@ get '/home' do
         user_id = db_pic_conection.get_user_id(@@user_name)
         user_id = user_id.join
         @list_folder = db_pic_conection.folder_for_specific_user(user_id)
+        @list_tag = db_pic_conection.tag_for_specific_user(user_id)
         erb :home, :locals => {:username => params["username"]}
     else
         redirect '/login.html'
@@ -233,4 +235,22 @@ post '/galery_by_folder' do
     erb :image_folder
 end
  
+get "/searchByTag" do 
+    user_id = db_pic_conection.get_user_id(@@user_name)
+    user_id = user_id.join
+    @list_tag = db_pic_conection.tag_for_specific_user(user_id)
+    @tag_name = "viaje" 
+    @pics_by_tag_list = db_pic_conection.image_by_tag(@tag_name, user_id)
+    erb :search_by_tag
+end
 
+post '/galery_by_tag' do
+    user_id = db_pic_conection.get_user_id(@@user_name)
+    user_id = user_id.join
+    @list_tag = db_pic_conection.tag_for_specific_user(user_id)
+    @tag_name = params["tagid"] 
+    puts "aaaaaaaaaa" 
+    puts @tag_name  
+    @pics_by_tag_list = db_pic_conection.image_by_tag(@tag_name, user_id)
+    erb :search_by_tag
+end
