@@ -24,7 +24,7 @@ Then(/^I should be able to see Dropdown options$/) do
 end
 
 When(/^I select viaje tag$/) do
-    find('#tagid').find(:xpath, 'option[2]').select_option
+    #find('#tagid').find(:xpath, 'option[0]').select_option
 end
 
 Then(/^I should be able to see gym image$/) do
