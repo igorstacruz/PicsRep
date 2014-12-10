@@ -246,3 +246,32 @@ describe "Folder" do
     end
 end
 
+describe "Tag" do
+
+    it "should add an single tag for image" do
+        img = PicDBConection.new()
+        image_path = @@PICS_PATH + "images/gym.jpg"
+        img.add_image_in_databse('1','2','test1.jpg',image_path)
+        tags = "test_tag"
+        img.add_tag_in_database('1', tags)
+        pic_id= img.get_last_pic_id_from_user('1')
+        pic_id = pic_id.join 
+        number_tags = img.number_of_tags_for_image(pic_id)
+        
+        expect(number_tags).to eq '1'
+    end
+
+    it "should add multiple tags for image" do
+        img = PicDBConection.new()
+        image_path = @@PICS_PATH + "images/gym.jpg"
+        img.add_image_in_databse('1','2','test1.jpg',image_path)
+        tags = "test_tag,Test2,Test3"
+        img.add_tag_in_database('1', tags)
+        pic_id= img.get_last_pic_id_from_user('1')
+        pic_id = pic_id.join 
+        number_tags = img.number_of_tags_for_image(pic_id)
+        
+        expect(number_tags).to eq '3'
+    end
+
+end

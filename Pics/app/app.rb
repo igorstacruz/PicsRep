@@ -4,6 +4,7 @@ require "../src/db_conection"
 require "../src/constants"
 require "../src/Folder"
 require "../src/Image"
+require 'pony' 
 
 
 
@@ -70,6 +71,31 @@ get '/home' do
     end  
 end
 
+#get '/home' do
+#     
+#    @@SaveSuccessfully = "..."
+#
+#    user_id = db_pic_conection.get_user_id(@@user_name)
+#    user_id = user_id.join
+#    @list_folder = db_pic_conection.folder_for_specific_user(user_id)
+#
+#    erb :home
+#
+#end
+
+#get '/home' do
+#     
+#    @@SaveSuccessfully = "..."
+#
+#    user_id = db_pic_conection.get_user_id(@@user_name)
+#    user_id = user_id.join
+#    @list_folder = db_pic_conection.folder_for_specific_user(user_id)
+#
+#    erb :home
+#
+#end
+
+
 get '/delete_image' do
      
     user_id = db_pic_conection.get_user_id(@@user_name)
@@ -81,43 +107,7 @@ get '/delete_image' do
 
 end
 
-get '/home' do
-     
-    @@SaveSuccessfully = "..."
-
-    user_id = db_pic_conection.get_user_id(@@user_name)
-    user_id = user_id.join
-    @list_folder = db_pic_conection.folder_for_specific_user(user_id)
-
-    erb :home
-
-end
-
-get '/delete_image' do
-     
-    user_id = db_pic_conection.get_user_id(@@user_name)
-    user_id = user_id.join
-
-    @list_pics = db_pic_conection.select_all_pisc_from_user(user_id)
-
-    @@SaveSuccessfully = "..."
-
-    erb :delete_image
-
-end
-
-get '/home' do
-     
-    @@SaveSuccessfully = "..."
-
-    user_id = db_pic_conection.get_user_id(@@user_name)
-    user_id = user_id.join
-    @list_folder = db_pic_conection.folder_for_specific_user(user_id)
-
-    erb :home
-
-end
-
+=begin
 get '/delete_image' do
      
     user_id = db_pic_conection.get_user_id(@@user_name)
@@ -130,6 +120,22 @@ get '/delete_image' do
     erb :delete_image
 
 end
+=end
+
+
+
+#get '/delete_image' do
+#     
+#    user_id = db_pic_conection.get_user_id(@@user_name)
+#    user_id = user_id.join
+#
+#    @list_pics = db_pic_conection.select_all_pisc_from_user(user_id)
+#
+#    @@SaveSuccessfully = "..."
+#
+#    erb :delete_image
+#
+#end
 
 get '/image_folder' do
      
@@ -151,8 +157,9 @@ get '/image_folder' do
 
 end
 
-get "/register" do
-    redirect "/register.html"
+get "/register*" do
+    @@wrong_user_message = ""    
+    erb :register
 end
 
 get "/create_folder" do
@@ -163,22 +170,53 @@ end
 post '/register*' do
     username = params[:username] 
     email = params[:email]
-    db_pic_conection.save_new_pic_user(username, email)
-    @@user_name = params[:username]
-    erb :home, :locals => {:username => params["username"]}
+
+    @user_id_exist = db_pic_conection.get_user_id(username)
+    @user_id_exist = @user_id_exist.join    
+    puts "Exception Ocurred"
+    puts  @user_id_exist
+    if @user_id_exist.to_i > 0
+
+        @@wrong_user_message = "User Name: #{params[:username]} are already in use"        
+        erb :register
+    else
+        db_pic_conection.save_new_pic_user(username, email)
+        #Pony.mail :to => params[:email],
+        #    :from => "igor.stacruz@gmail.com",
+        #    :subject => "Thanks for signing to Pics App, #{params[:username]}!",            
+        #    :body => erb(:mail_body),                  
+        #    :via => :smtp,
+        #    :via_options => {
+        #        :address              => 'smtp.gmail.com',
+        #        :port                 => '587',
+        #        :enable_starttls_auto => true,
+        #        :user_name            => @@APP_MAIL,
+        #        :password             => @@APP_MAIL_PASS,
+        #        :authentication       => :plain,
+        #        :domain               => 'localhost.localdomain'}
+        session[:user_id] = params[:username] 
+        @@user_name = params[:username]
+        user_id = db_pic_conection.get_user_id(@@user_name)
+        user_id = user_id.join
+        @list_tag = db_pic_conection.tag_for_specific_user(user_id) 
+        redirect '/home'
+    end 
 end
 
 post '/imagetosave' do
     @image_path = params[:imagepath]
     @pic_name = params[:files]
     @folder_id = params[:folderid]
+    @pic_tag = params[:imagetag]     
     user_id = db_pic_conection.get_user_id(@@user_name)
     user_id = user_id.join
 
     db_pic_conection.add_image_in_databse(user_id, @folder_id, @pic_name, @image_path)
     
     db_pic_conection.read_image_from_database(user_id, @folder_id, @pic_name)
-
+    if @pic_tag != nil
+        db_pic_conection.add_tag_in_database(user_id, @pic_tag)
+    end   
     @@SaveSuccessfully = "Image Saved"
     @list_folder = db_pic_conection.folder_for_specific_user(user_id)
 

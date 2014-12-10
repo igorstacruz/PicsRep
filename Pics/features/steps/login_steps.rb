@@ -2,11 +2,6 @@ Given(/^I have an account in the application$/) do
     puts "I have my account: user/password"
 end
 
-When(/^I navigate to the login page$/) do
-    visit  "http://localhost:4567/login.html"
-    page.driver.browser.manage.window.maximize
-end
-
 When(/^I enter wrong account credentials$/) do 
     fill_in "username", :with => "Wrong"
     fill_in "password", :with => "Wrong"

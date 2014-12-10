@@ -18,19 +18,22 @@
                 <form method="POST">
                     <div class="form-group">
                         <label>Username:</label>
-                        <input class="form-control" type="text" name="username" placeholder="login name"/>
+                        <input class="form-control" type="text" name="username" required placeholder="login name">
                     </div>
 
                     <div class="form-group">
                         <label>E-mail:</label>
-                        <input class="form-control" type="text" name="email" placeholder="E-mail">
+                        <input class="form-control" type="email" name="email" required placeholder="E-mail">
                     </div>
 
                     <span class="input-group-btn">
-                        <button type="submit" class="btn btn-block btn-lg">Sign up</button>
+                        <button type="submit" class="btn btn-block btn-lg" id="sing_up" >Sign up</button>
                     </span>
                 </form>
             </div>
         </div>
+        <div >
+            <h4><font color='red'><%= @@wrong_user_message %></font></h4>
+        </div>        
     </body>
 </html>

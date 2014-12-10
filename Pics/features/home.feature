@@ -39,3 +39,4 @@ Feature: Home Page
 	  When I login the application with a valid user account
 	  And I try to save a new image from "images/truck.jpg" in the following folder "tester/folder1/folder11"
 	  Then I should see a message saying that the image was saved
+

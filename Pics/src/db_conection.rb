@@ -56,7 +56,7 @@ class PicDBConection
 	def save_new_pic_user(us_name, us_email)
 		begin
     
-    		db = SQLite3::Database.open( "PicDB" )
+    		db = SQLite3::Database.open "PicDB.db" 
     		query = "INSERT INTO User(Name, Email, Password, Valid_Account) VALUES ('" + us_name + "', '" + us_email + "', '', 0)"
     		db.execute(query)    		
     
@@ -223,6 +223,65 @@ class PicDBConection
             db.close if db
         end
     end
+
+  ####### Tag METHODS #######
+
+    def add_tag_in_database(user_id, pic_tag)
+        begin
+            @pic_id= get_last_pic_id_from_user(user_id)
+            @pic_id = @pic_id.join            
+            db = SQLite3::Database.open 'PicDB.db'
+            tags = pic_tag.split(',') 
+            for tag in tags
+                tag.strip
+                db.execute "INSERT INTO Tag (PicID, Tag)VALUES(" + @pic_id + ", '" + tag + "')"                
+            end
+            #db.execute "INSERT INTO Tag (PicID, Tag)VALUES(" + pic_id + ", '" + pic_tag + "')" 
+        rescue SQLite3::Exception => e
+            return puts e
+        
+        ensure
+            db.close if db
+        end
+
+    end
+
+    def get_last_pic_id_from_user(user_id)
+        begin
+        db = SQLite3::Database.open "PicDB.db"
+        
+        pic_id = db.execute "SELECT max(PicID) FROM Picture where UserID = '" + user_id + "'"
+        return pic_id
+         
+        rescue SQLite3::Exception => e 
+    
+            puts "Exception occurred"
+            puts e
+    
+        ensure
+            db.close if db
+        end             
+    end
+
+    def number_of_tags_for_image(pic_id)
+        begin
+        db = SQLite3::Database.open "PicDB.db"
+        
+        num_tags = db.execute "SELECT count(Tag) FROM Tag where PicID = '" + pic_id + "'"
+        num_tags = num_tags.join
+        return num_tags        
+         
+        rescue SQLite3::Exception => e 
+    
+            puts "Exception occurred"
+            puts e
+    
+        ensure
+            db.close if db
+        end             
+    end
+
+
 
     ####### FOLDER METHODS #######
 
