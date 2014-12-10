@@ -7,7 +7,8 @@ require "fileutils"
 
 
 #@@PICS_PATH = "E:/GitHub/Pics/app/public/"
-@@PICS_PATH = "C:/CloneGitHub/Pics/app/public/"
+#@@PICS_PATH = "C:/CloneGitHub/Pics/app/public/"
+@@PICS_PATH = "C:/Users/Igor Santa Cruz/Documents/GitHub/PicsRep/Pics/app/public/"
 
 #
 #Capybara.default_driver = :poltergeist
@@ -41,5 +42,5 @@ class CapybaraDriverRegistrar
   end
 end
 #CapybaraDriverRegistrar.register_selenium_driver(:internet_explorer)
-#CapybaraDriverRegistrar.register_selenium_driver(:firefox)
-CapybaraDriverRegistrar.register_selenium_driver(:chrome)
+CapybaraDriverRegistrar.register_selenium_driver(:firefox)
+#CapybaraDriverRegistrar.register_selenium_driver(:chrome)
